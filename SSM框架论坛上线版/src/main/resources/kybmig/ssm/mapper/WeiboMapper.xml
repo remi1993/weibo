@@ -1,0 +1,40 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 和 java mapper 的类名一样，从包名开始打，有自动补全-->
+<mapper namespace="kybmig.ssm.mapper.WeiboMapper">
+    <!-- resultType 和 mapper 中的方法返回值一样，不能省，从包名开始打，有自动补全-->
+    <!--  里面的 sql 语句，有自动补全,要配置 ide 的 datasource -->
+    <select id="selectAllWeibo" resultType="kybmig.ssm.model.WeiboModel">
+        SELECT * FROM ssm.weibo
+    </select>
+
+    <!-- 传参数方式1，直接传入一个基本类型 int，这个 int 会被绑定到 ${id} -->
+    <select id="selectWeibo" resultType="kybmig.ssm.model.WeiboModel">
+        SELECT * FROM ssm.weibo WHERE id = ${id}
+    </select>
+
+    <select id="selectOneWithWeibo" resultType="kybmig.ssm.model.WeiboModel">
+        SELECT
+            weibo.id,
+            weibo.content,
+            weibo.userId,
+            weibo.createdTime
+        FROM ssm.weibo
+        where weibo.userId = #{userId}
+    </select>
+
+    <!-- 传参方式2，传入一个对象。content 代表这个对象的 content 属性，注意这个对象要有 getter setter -->
+    <!-- useGeneratedKeys keyProperty 当我传入一个对象的时候，这两个属性可以把数据库创建的 id 赋值给这个对象 -->
+    <insert id="insertWeibo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ssm.weibo (content, userId, createdTime) VALUES (#{content}, #{userId},#{createdTime})
+    </insert>
+    
+    <update id="updateWeibo">
+        UPDATE ssm.weibo SET content = #{content} WHERE id = #{id}
+    </update>
+
+    <delete id="deleteWeibo">
+        DELETE FROM ssm.weibo WHERE id = #{id}
+    </delete>
+</mapper>

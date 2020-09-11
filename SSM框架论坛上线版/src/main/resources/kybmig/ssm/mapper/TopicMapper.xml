@@ -1,0 +1,236 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 和 java mapper 的类名一样，从包名开始打，有自动补全-->
+<mapper namespace="kybmig.ssm.mapper.TopicMapper">
+    <!-- resultType 和 mapper 中的方法返回值一样，不能省，从包名开始打，有自动补全-->
+    <!--  里面的 sql 语句，有自动补全,要配置 ide 的 datasource -->
+    <resultMap id="AllTopicMap" type="kybmig.ssm.model.TopicModel">
+    <id property="id" column="id" />
+    <result property="title" column="title" />
+    <result property="content" column="content" />
+    <result property="userId" column="userId" />
+    <result property="userId" column="userId" />
+    <result property="createdTime" column="createdTime" />
+    <result property="updatedTime" column="updatedTime" />
+    <collection property="userList" ofType="kybmig.ssm.model.UserModel" >
+        <id property="id" column="u_id" />
+        <result property="avatar" column="avatar" />
+        <result property="username" column="username" />
+        <result property="role" column="role" />
+        <result property="createdTime" column="u_createdTime" />
+        <result property="email" column="email" />
+    </collection>
+    </resultMap>
+    <select id="selectAllTopic" resultMap ="AllTopicMap">
+        SELECT
+            topic.id,
+            topic.title,
+            topic.content,
+            topic.userId,
+            topic.boardId,
+            topic.createdTime,
+            topic.updatedTime,
+            user.id as u_id,
+            user.avatar,
+            user.username,
+            user.role,
+            user.createdTime as u_createdTime,
+            user.email
+        FROM ssm.topic
+        topic left outer join user
+        on topic.userId = user.id
+        order by topic.updatedTime DESC;
+    </select>
+
+<!--    用于Userindex路由-->
+<!--    <select id="selectUserTopic" resultType="kybmig.ssm.model.TopicModel">-->
+<!--        SELECT * FROM ssm.topic WHERE userId = ${userId}-->
+<!--    </select>-->
+
+    <!-- 传参数方式1，直接传入一个基本类型 int，这个 int 会被绑定到 ${id} -->
+    <select id="selectTopic" resultType="kybmig.ssm.model.TopicModel">
+        SELECT * FROM ssm.topic WHERE id = ${id}
+    </select>
+
+    <!-- 传参方式2，传入一个对象。content 代表这个对象的 content 属性，注意这个对象要有 getter setter -->
+    <!-- useGeneratedKeys keyProperty 当我传入一个对象的时候，这两个属性可以把数据库创建的 id 赋值给这个对象 -->
+    <insert id="insertTopic" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ssm.topic (title, content, userId, boardId, createdTime, updatedTime ) VALUES (#{title}, #{content}, #{userId}, #{boardId}, #{createdTime}, #{createdTime})
+    </insert>
+    
+    <update id="updateTopic">
+        UPDATE ssm.topic SET content = #{content}, title=#{title}, updatedTime = #{updatedTime} WHERE id = #{id}
+    </update>
+
+    <delete id="deleteTopic">
+        DELETE FROM ssm.topic WHERE id = #{id}
+    </delete>
+
+    <resultMap id="TopicWithCommentsMap" type="kybmig.ssm.model.TopicModel">
+        <id property="id" column="id" />
+        <result property="title" column="title" />
+        <result property="content" column="content" />
+        <result property="userId" column="userId" />
+        <result property="createdTime" column="createdTime" />
+        <collection property="commentList" ofType="kybmig.ssm.model.TopicCommentModel" >
+            <id property="id" column="c_id" />
+            <result property="content" column="c_content" />
+            <result property="userId" column="c_userId" />
+            <result property="createdTime" column="c_createdTime" />
+            <result property="updatedTime" column="c_updatedTime" />
+        </collection>
+        <collection property="userList" ofType="kybmig.ssm.model.UserModel" >
+            <id property="id" column="u_id" />
+            <result property="avatar" column="avatar" />
+            <result property="username" column="username" />
+        </collection>
+    </resultMap>
+    <select id="selectOneWithComments" resultMap="TopicWithCommentsMap">
+        SELECT
+            topic.id,
+            topic.title,
+            topic.content,
+            topic.userId,
+            topic.createdTime,
+            TopicComment.id as c_id,
+            TopicComment.content as c_content,
+            TopicComment.userId as c_userId,
+            TopicComment.createdTime as c_createdTime,
+            TopicComment.updatedTime as c_updatedTime,
+            user.id as u_id,
+            user.avatar,
+            user.username
+        FROM ssm.topic
+        topic left outer join TopicComment
+        on topic.id = TopicComment.topicId
+        join user
+        on topic.userId = user.id
+        where topic.id = #{id}
+        order by c_updatedTime DESC;
+    </select>
+
+    <resultMap id="TopicWithCommentsUseridMap" type="kybmig.ssm.model.TopicModel">
+        <id property="id" column="id" />
+        <result property="title" column="title" />
+        <result property="content" column="content" />
+        <result property="userId" column="userId" />
+        <result property="createdTime" column="createdTime" />
+        <collection property="commentList" ofType="kybmig.ssm.model.TopicCommentModel" >
+            <id property="id" column="c_id" />
+            <result property="content" column="c_content" />
+            <result property="userId" column="c_userId" />
+            <result property="createdTime" column="c_createdTime" />
+            <result property="updatedTime" column="c_updatedTime" />
+        </collection>
+        <collection property="userList" ofType="kybmig.ssm.model.UserModel" >
+            <id property="id" column="u_id" />
+            <result property="avatar" column="avatar" />
+            <result property="username" column="username" />
+        </collection>
+    </resultMap>
+    <select id="selectOneWithCommentsUserid" resultMap="TopicWithCommentsUseridMap">
+        SELECT
+            topic.id,
+            topic.title,
+            topic.content,
+            topic.userId,
+            topic.createdTime,
+            TopicComment.id as c_id,
+            TopicComment.content as c_content,
+            TopicComment.userId as c_userId,
+            TopicComment.createdTime as c_createdTime,
+            TopicComment.updatedTime as c_updatedTime,
+            user.id as u_id,
+            user.avatar,
+            user.username
+        FROM ssm.topic
+                 topic left outer join TopicComment
+                 on topic.id = TopicComment.topicId
+                 join user
+                 on TopicComment.userId = user.id
+        where topic.id = #{id}
+        order by c_updatedTime DESC;
+    </select>
+
+    <!--    用于Userindex路由最近创建的话题-->
+    <resultMap id="TopicWithCommentsByuserIdMap" type="kybmig.ssm.model.TopicModel">
+        <id property="id" column="id" />
+        <result property="title" column="title" />
+        <result property="content" column="content" />
+        <result property="userId" column="userId" />
+        <result property="createdTime" column="createdTime" />
+        <result property="updatedTime" column="updatedTime" />
+        <collection property="commentList" ofType="kybmig.ssm.model.TopicCommentModel" >
+            <id property="id" column="c_id" />
+            <result property="topicId" column="c_topicId" />
+            <result property="content" column="c_content" />
+            <result property="userId" column="c_userId" />
+            <result property="createdTime" column="c_createdTime" />
+            <result property="updatedTime" column="c_updatedTime" />
+        </collection>
+    </resultMap>
+    <select id="selectOneWithCommentsByuserId" resultMap="TopicWithCommentsByuserIdMap">
+        SELECT
+            topic.id,
+            topic.title,
+            topic.content,
+            topic.userId,
+            topic.createdTime,
+            topic.updatedTime,
+            TopicComment.topicId as c_topicId,
+            TopicComment.id as c_id,
+            TopicComment.content as c_content,
+            TopicComment.userId as c_userId,
+            TopicComment.createdTime as c_createdTime,
+            TopicComment.updatedTime as c_updatedTime
+        FROM ssm.topic
+        topic left outer join TopicComment
+        on topic.id = TopicComment.topicId
+        where topic.userId = #{userId}
+        order by createdTime DESC;
+    </select>
+
+    <!--    用于Userindex路由最近回复的话题-->
+    <resultMap id="TopicWithCommentsWithUserMap" type="kybmig.ssm.model.TopicModel">
+        <id property="id" column="id" />
+        <result property="title" column="title" />
+        <result property="content" column="content" />
+        <result property="userId" column="userId" />
+        <result property="topicId" column="topicId" />
+        <collection property="commentList" ofType="kybmig.ssm.model.TopicCommentModel" >
+            <id property="id" column="c_id" />
+            <result property="content" column="c_content" />
+            <result property="userId" column="c_userId" />
+            <result property="createdTime" column="c_createdTime" />
+            <result property="updatedTime" column="c_updatedTime" />
+        </collection>
+        <collection property="userList" ofType="kybmig.ssm.model.UserModel" >
+            <id property="id" column="u_id" />
+            <result property="avatar" column="avatar" />
+            <result property="username" column="username" />
+        </collection>
+    </resultMap>
+    <select id="selectOneWithCommentsWithUserByuserId" resultMap="TopicWithCommentsWithUserMap">
+        SELECT
+            topic.id,
+            topic.title,
+            topic.content,
+            topic.userId,
+            TopicComment.id as c_id,
+            TopicComment.content as c_content,
+            TopicComment.userId as c_userId,
+            TopicComment.createdTime as c_createdTime,
+            TopicComment.updatedTime as c_updatedTime,
+            user.id as u_id,
+            user.avatar,
+            user.username
+        FROM ssm.topic
+        topic left outer join TopicComment
+        on topic.id = TopicComment.topicId
+        join user
+        on topic.userId = user.id
+        where TopicComment.userId = #{userId}
+        order by c_updatedTime DESC;
+    </select>
+</mapper>
