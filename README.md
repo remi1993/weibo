@@ -11,25 +11,25 @@
 用户以游客身份进入主页，在访问todo页面的时候使用AOP (面向切片编程)对用户身份进行判断是否有权访问，
 没有访问权跳转至登录页面，
 若用户是无账户则选择注册新用户
-![image]https://github.com/remi1993/weibo/blob/master/picture/1.%E6%B3%A8%E5%86%8C%E7%99%BB%E5%BD%95.gif
+![image](https://github.com/remi1993/weibo/blob/master/picture/1.%E6%B3%A8%E5%86%8C%E7%99%BB%E5%BD%95.gif)
 
 访问者以普通用户身份进行增删改todo的操作，前后端交互使用了 AJAX 方式实现无需刷新页面加载数据
-![image]https://github.com/remi1993/weibo/blob/master/picture/2.todo2.gif
+![image](https://github.com/remi1993/weibo/blob/master/picture/2.todo2.gif)
 
 访问者以普通用户身份查看topic板块所有帖子，
 用户发帖，
 用户点击帖子标题进入查看帖子详细内容并发表评论，
-![image]https://github.com/remi1993/weibo/blob/master/picture/3.topic.gif
+![image](https://github.com/remi1993/weibo/blob/master/picture/3.topic.gif)
 
 用户对topic进行修改和删除操作
-![image]https://github.com/remi1993/weibo/blob/master/picture/3.topic%E5%88%A0%E6%94%B9.gif
+![image](https://github.com/remi1993/weibo/blob/master/picture/3.topic%E5%88%A0%E6%94%B9.gif)
 
 从topic点击作者跳转至个人主页，
 个人主页按照时间先后顺序展示了该用户最近回复的topic和最近创建的topic
-![image]https://github.com/remi1993/weibo/blob/master/picture/3.topic%E8%B7%B3%E8%BD%AC%E4%B8%AA%E4%BA%BA%E4%B8%BB%E9%A1%B5.gif
+![image](https://github.com/remi1993/weibo/blob/master/picture/3.topic%E8%B7%B3%E8%BD%AC%E4%B8%AA%E4%BA%BA%E4%B8%BB%E9%A1%B5.gif)
 
 访问weibo页面并添加weibo
-![image]https://github.com/remi1993/weibo/blob/master/picture/4.weibo.gif
+![image](https://github.com/remi1993/weibo/blob/master/picture/4.weibo.gif)
 
 用户对微博进行删除和修改操作
-![image]https://github.com/remi1993/weibo/blob/master/picture/4.weibo%E5%88%A0%E6%94%B9.gif
+![image](https://github.com/remi1993/weibo/blob/master/picture/4.weibo%E5%88%A0%E6%94%B9.gif)
